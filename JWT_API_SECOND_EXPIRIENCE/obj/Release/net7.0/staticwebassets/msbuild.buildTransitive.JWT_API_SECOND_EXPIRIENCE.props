@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\JWT_API_SECOND_EXPIRIENCE.props" />
+</Project>

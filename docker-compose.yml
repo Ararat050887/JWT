@@ -1,0 +1,70 @@
+version: '3'
+services:
+  jwt_api_second_expirience:
+    build:
+      context: .
+      dockerfile: JWT_API_SECOND_EXPIRIENCE/Dockerfile
+    depends_on:
+      - db_mysql
+      - db_mssql
+    ports:
+     - 5000:80/tcp
+     - 50001:443/tcp
+    links:
+      - db_mysql
+    networks:
+      - my_custom_network
+  db_mysql:
+    image: mysql:latest
+    cap_add:
+      - SYS_NICE
+    restart: always
+    environment:
+      - MYSQL_DATABASE=mydb
+      - MYSQL_ROOT_PASSWORD=passw00rd
+    ports:
+      - '3346:3306'
+    volumes:
+      #- db_mysql:/var/lib/mysql
+      - C:\mysql:/var/lib/mysql
+      - ./setup.sql:/docker-entrypoint-initdb.d/setup.sql
+    networks:
+      - my_custom_network 
+  db_mssql:
+     image: mcr.microsoft.com/mssql/server:2022-latest
+     environment:
+       SA_PASSWORD: "Mypassw00rd@"
+       ACCEPT_EULA: "Y"
+     ports:
+     - '1433:1433'
+     volumes:
+      - ./data:/var/opt/mssql/data:rwx
+     networks:
+      - my_custom_network
+networks:
+  my_custom_network:
+    driver: bridge
+volumes:
+  db_mysql:
+    driver: local
+  db_mssql:
+    driver: local  
+
+
+# version: '3'
+# services:
+#   jwt_api_second_experience:
+#     build:
+#       context: .
+#       dockerfile: JWT_API_SECOND_EXPERIENCE/Dockerfile
+#     ports:
+#       - 5000:80/tcp
+#       - 50001:443/tcp
+#     networks:
+#       - my_custom_network
+
+# networks:
+#   my_custom_network:
+#     driver: bridge
+
+
